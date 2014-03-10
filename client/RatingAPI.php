@@ -1,8 +1,6 @@
 <?php
-
-define("BASE_URL", "http://localhost/api");
+define("BASE_URL", "http://api:8888/api");
 session_start();
-
 class RatingClient
 {
         private $consumer_id;
@@ -30,23 +28,39 @@ class RatingClient
         
         private function _login()
         {
-            if(apc_fetch('ratingapi-session') == null)
+            $mc = new Memcache(); 
+            $mc->addServer("localhost", 11211);
+            if($mc->get('ratingapi-session') == null)
             {
                 $result = $this->http_get("/login", null, true);
                 if($result['session'] != '' && $result['session'] != null)
                 {
                     $this->session = $result['session'];
-                      apc_add('ratingapi-session', $this->session);
+                    $mc->set('ratingapi-session', $this->session);
+                }else
+                    throw new RatingException('Session not obtained');
+            }
+            else
+            {
+                $this->session = $mc->get('ratingapi-session');
+                $r = new HttpRequest($this->base_url.'/checkSession/?session='.$this->session, HttpRequest::METH_GET);
+                $r->send();
+                if($r->getResponseHeader("Location") == $this->base_url."/login")
+                {
+                    $mc->set('ratingapi-session', null);
+                    $this->_login();
                 }
-            }else
-                $this->session = apc_fetch('ratingapi-session');
+            }
         }
         
         public function logout()
         {
+            
+            $mc = new Memcached(); 
+            $mc->addServer("localhost", 11211);
             unset($this->session);
             $this->http_get("/logout");
-            apc_delete('ratingapi-session');
+            $mc->delete('ratingapi-session');
         }
         
         public function isLogged()
@@ -61,7 +75,7 @@ class RatingClient
         // Objects
         public function listObjects($options = null)
         {
-                return $this->listObject($this->http_get("/object", $options));
+                return $this->listObject($this->http_get("/object/", $options));
         }
         
         public function getObject($id)
@@ -116,8 +130,7 @@ class RatingClient
         private function listObject($result)
         {
                 $created = array();
-                
-                foreach ($result as $key => $object)
+                foreach ($result as $object)
                 {
                     $created[] = new RatingObject($object, $this);
                 }
@@ -152,7 +165,8 @@ class RatingClient
                 $args['session'] = $this->session;
                 
                 // Add encoded args to the full_url
-                $full_url .= $this->encodeArray($args, true);
+                if(!$credentials)
+                    $full_url .= $this->encodeArray($args, true);
 
                 $r = new HttpRequest($full_url, HttpRequest::METH_GET);
                 if($credentials){
@@ -166,7 +180,6 @@ class RatingClient
                 // Decode and check for errors
                 $response = json_decode($response, true);
                 RatingException::check($response);
-                
                 // If no exceptions trowed return the body
                 return $response;
         }
@@ -288,7 +301,7 @@ class RatingException extends Exception
         public static function check($result)
         {
 
-                if (isset($result["error"]))
+                if(isset($result["error"]))
                 {
                         throw new RatingException("<b>{$result["error"]["status"]}</b> [".self::getStatusCodeMessage($result["error"]["status"])."] : ".$result["error"]["message"], $result["error"]["status"]);
                 }

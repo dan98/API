@@ -1,7 +1,6 @@
 <?php
 include('RatingAPI.php');
-$api = new RatingClient('708872008', 'JiduMkcXqJ9XKHUsnXNUnJGjmKU7pdii7QdjARv8oZvfEr3BXWuFnHFqwrWluo8n');
-
+$api = new RatingClient('296717969', 'syAVVaCAHcwXNYWuuOmDORbDp403hORKnsGjCiTjuqhioeNT29xR1IvqNvt5kkPI');
 if (isset($_POST['winner'])) {
     switch ($_POST['winner']) {
         case '0': $api->createBattle($_SESSION['id0'], $_SESSION['id1']);
@@ -10,11 +9,11 @@ if (isset($_POST['winner'])) {
             break;
     }
 }
-do
-    $concurents = $api->listObjects(array('order' => 'random')); while ($_SESSION['id0'] == $concurents[0]->id && $_SESSION['id1'] == $concurents[1]->id);
+$concurents = $api->listObjects(array('order' => 'random'));
 
 $_SESSION['id0'] = $concurents[0]->id;
 $_SESSION['id1'] = $concurents[1]->id;
+
 $top = $api->listObjects(array('order' => 'score DESC', 'limit' => 10));
 
 $battles = array();
@@ -70,12 +69,12 @@ $history = $api->listBattles(array('limit' => 10, 'order' => 'created_time DESC'
                 </tr>
                 <tr>
                     <?php foreach ($concurents as $concurent) { ?>
-                        <td>Won: <?= $concurent->wins ?>, Lost: <?= $concurent->losses ?></td>
+                        <td>Cistiguri: <?= $concurent->wins ?>, Pierderi: <?= $concurent->losses ?></td>
                     <?php } ?>
                 </tr>
                 <tr>
                     <?php foreach ($concurents as $concurent) { ?>
-                        <td>Score: <?= $concurent->score ?></td>
+                        <td>Scor: <?= $concurent->score ?></td>
                     <?php } ?>
                 </tr>
                 <tr>
@@ -90,10 +89,10 @@ $history = $api->listBattles(array('limit' => 10, 'order' => 'created_time DESC'
                                 <thead>
                                     <tr>
                                         <td>
-                                            <b>winner</b>
+                                            <b>cistigator</b>
                                         </td>
                                         <td>
-                                            <b>loser</b>
+                                            <b>ratat</b>
                                         </td>
                                     </tr>
                                 </thead>
@@ -111,42 +110,42 @@ $history = $api->listBattles(array('limit' => 10, 'order' => 'created_time DESC'
             </table>
         </center>
 
-        <h2>Top Rated</h2>
+        <h2>Top cele mai preferate universitati</h2>
         <center>
             <table>
                 <tr>
-                    <? foreach($top as $key => $image) : ?>
+                    <?php foreach($top as $key => $image) : ?>
                     <td valign="top"><img src="<?= $image->image_url ?>" width="70" /></td>
-                    <? endforeach ?>
+                    <?php endforeach ?>
                 </tr>
 
                 <tr>
-                    <? foreach($top as $key => $image) : ?>
-                    <td valign="top">Score: <?= $image->score ?></td>
-                    <? endforeach ?>
+                    <?php foreach($top as $key => $image) : ?>
+                    <td valign="top">Scor: <?= $image->score ?></td>
+                    <?php endforeach ?>
                 </tr>
                 <tr>
-                    <? foreach($top as $key => $image) : ?>
-                    <td valign="top">Won: <?= $image->wins ?></td>
-                    <? endforeach ?>
+                    <?php foreach($top as $key => $image) : ?>
+                    <td valign="top">Cistigari: <?= $image->wins ?></td>
+                    <?php endforeach ?>
                 </tr>
                 <tr>
-                    <? foreach($top as $key => $image) : ?>
-                    <td valign="top">Lost: <?= $image->losses ?></td>
-                    <? endforeach ?>
+                    <?php foreach($top as $key => $image) : ?>
+                    <td valign="top">Pierderi: <?= $image->losses ?></td>
+                    <?php endforeach ?>
                 </tr>
             </table>
         </center>
-        <h2>Last Battles</h2>
+        <h2>Ultimele Batalii</h2>
         <center>
             <table width="40%">
                 <thead align="center">
                     <tr>
                         <td>
-                            <b>winner</b>
+                            <b></b>
                         </td>
                         <td>
-                            <b>loser</b>
+                            <b>-----</b>
                         </td>
                     </tr>
                 </thead>

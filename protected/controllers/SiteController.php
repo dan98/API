@@ -4,7 +4,30 @@ class SiteController extends CController {
 
     public $layout = 'column1';
     public $breadcrumbs = array();
-
+    
+    public function filters()
+    {
+        return array(
+                'accessControl', // perform access control for CRUD operations
+        );
+    }
+        
+    public function accessRules()
+    {
+        return array(
+                array('allow',
+                        'actions'=>array('error','page','register','login','index'),
+                        'users'=>array('*'),
+                ),
+                array('allow',
+                        'actions'=>array('logout','checkSession'),
+                        'users'=>array('@'),
+                ),
+                array('deny',
+                        'users'=>array('*')
+                )
+        );
+    }
     public function actions() {
         return array(
             'page' => array(
@@ -85,6 +108,10 @@ class SiteController extends CController {
         } else {
             ApiOutput::sendResponse(500);
         }
+    }
+    
+    public function actionCheckSession() {
+        
     }
 
     public function actionIndex() {

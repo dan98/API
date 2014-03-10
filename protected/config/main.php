@@ -20,13 +20,13 @@ return array(
     'components' => array(
         'user' => array(
             // enable cookie-based authentication
-            'allowAutoLogin' => true,
+            'allowAutoLogin' => true
         ),
         'db' => array(
             'connectionString' => 'mysql:host=localhost;dbname=api',
             'emulatePrepare' => true,
             'username' => 'root',
-            'password' => '',
+            'password' => 'hypertext',
             'charset' => 'utf8',
             'tablePrefix' => 'api_',
             'behaviors' => array(
@@ -45,6 +45,7 @@ return array(
             'caseSensitive' => false,
             'showScriptName' => false,
             'rules' => array(
+                array('site/checkSession', 'pattern' => 'api/checkSession', 'verb' => 'GET'),
                 array('site/login', 'pattern' => 'api/login', 'verb' => 'GET'),
                 array('site/logout', 'pattern' => 'api/logout', 'verb' => 'GET'),
                 // Object

@@ -1,21 +1,6 @@
 <?php
 class BattleController extends ApiController{
     
-    public function filters()
-    {
-        return array( 'accessControl' ); // perform access control for CRUD operations
-    }
- 
-    public function accessRules()
-    {
-        return array(
-            array('allow', // allow authenticated users to access all actions
-                'users'=>array('@'),
-            ),
-            array('deny'),
-        );
-    }
-    
     public function actions()
     {    
         return array(
@@ -46,15 +31,15 @@ class BattleController extends ApiController{
 
             if($winner->user_id == Yii::app()->user->id && $loser->user_id == Yii::app()->user->id)
             {
-                $k = 24;
+                $k = 32;
                 $winner_expected = $this->_expected($loser->score, $winner->score);
-                $winner->score = $winner->score + $k * (1-$winner_expected);
+                $winner->score = $winner->score + $k*(1 - $winner_expected);
                 $model->winner_score = $winner->score;
                 $winner->wins += 1;
                 $winner->save();
 
                 $loser_expected = $this->_expected($winner->score, $loser->score);
-                $loser->score = $loser->score + $k * (0-$loser_expected);
+                $loser->score = $loser->score + $k*(0 - $loser_expected);
                 $model->loser_score = $loser->score;
                 $loser->losses += 1;
                 $loser->save();
