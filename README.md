@@ -1,6 +1,11 @@
 #RatingAPI
 
-REST API that helps you building ELO based rating systems.
+REST API that helps you building ELO based rating systems. Elo's rating system is used in a lot of sports, from chess to football and teniss to order the participants by their rating. The rating of objects in Elo's rating change after each game, based on the expected outcome of the winner and loser. Read more on wikipedia.
+
+##Dependecies
+* Use apache with php5.4+, preferred php5.5.
+* Memcached version 2.x
+* Http extension version 1.7.x
 
 ##Usage
 
@@ -53,8 +58,24 @@ echo $battle->created_time;
 ### Create Object / Battle
 To create a new object, use the method `$api->createObject()`.
 ```php
-$api->createObject()
+$api->createObject(array(
+  'name'=> '' // string[256]
+  'image_url'=> '' // string[1000]
+  'score'=> 1400 // Default: 1400
+  'wins'=> 0 // Default: 0
+  'loses'=> 0 // Default: 0
+));
 ```
+The object property `updated_time`, will update every time object participates in a battle. Property `created_time` is set when the object is created.
+
+The main two options when creating a battle is `winner` and `loser`.
+```php
+$api->createBattle($winner_id, $loser_id);
+// Also, as parameters, you can pass objects:
+$api->createBattle($winner, $loser);
+```
+Both, `createObject` and `createBattle`, return RatingObject or RatingBattle when called.
+
 
 
 
