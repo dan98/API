@@ -2,8 +2,7 @@
 
 class SiteController extends CController {
 
-    public $layout = 'column1';
-    public $breadcrumbs = array();
+    public $layout = 'main';
     
     public function filters()
     {
@@ -28,7 +27,9 @@ class SiteController extends CController {
                 )
         );
     }
-    public function actions() {
+    
+    public function actions()
+    {
         return array(
             'page' => array(
                 'class' => 'CViewAction',
@@ -36,29 +37,33 @@ class SiteController extends CController {
         );
     }
 
-    public function actionError() {
-        if ($error = Yii::app()->errorHandler->error) {
+    public function actionError()
+    {
+        if ($error = Yii::app()->errorHandler->error)
             if (Yii::app()->request->isAjaxRequest)
                 echo $error['message'];
             else
                 ApiOutput::sendResponse($error['code'], $error['message'].' '.$error['file'].'['.$error['line'].']');
-        }
     }
 
-    public function actionRegister() {
+    public function actionRegister()
+    {
         $model = new RegisterForm;
 
-        if (isset($_POST['RegisterForm'])) {
+        if (isset($_POST['RegisterForm']))
+        {
             $model->attributes = $_POST['RegisterForm'];
 
-            if ($model->validate()) {
+            if ($model->validate())
+            {
                 $user = new User;
 
-                // Generate random id and a random secre
+                // Generate random id and a random secret
                 $user->id = Yii::app()->db->uid->getNewId('User');
                 $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
                 $randomString = '';
-                for ($i = 0; $i < 64; $i++) {
+                for ($i = 0; $i < 64; $i++)
+                {
                     $randomString .= $characters[rand(0, strlen($characters) - 1)];
                 }
 
@@ -67,17 +72,17 @@ class SiteController extends CController {
                 $user->name = $model->name;
                 $user->description = $model->description;
 
-                if ($user->save()) {
+                if ($user->save())
                     Yii::app()->user->setFlash('register', "Thank you for registering on our service. Here are your credentials: consumer_id={$user->id} and consumer_secret={$user->consumer_secret} .");
-                } else
+                else
                     throw new CHttpException('500', 'Error registering this user');
             }
         }
         $this->render('register', array('model' => $model));
     }
 
-    public function actionLogin() {
-
+    public function actionLogin()
+    {
         // Check if credentials are not empty
         if (empty($_SERVER['HTTP_X_CONSUMER_ID']) || empty($_SERVER['HTTP_X_CONSUMER_SECRET']))
             ApiOutput::sendResponse(401, 'Id or secret is empty!');
@@ -90,15 +95,15 @@ class SiteController extends CController {
         $user = new UserIdentity($consumer_id, $consumer_secret);
 
         // Try to authenticate
-        if ($user->authenticate()) {
-            // If no error pass return the session
+        if ($user->authenticate())
+        // If no error pass return the session
             ApiOutput::sendResponse(200, CJSON::encode(
                             array(
                                 'session' => Yii::app()->session->getSessionID()
                             )
                     )
             );
-        } else
+        else
             ApiOutput::sendResponse(401);
     }
 
@@ -111,7 +116,7 @@ class SiteController extends CController {
     }
     
     public function actionCheckSession() {
-        
+        ApiOutput::sendResponse(200);
     }
 
     public function actionIndex() {

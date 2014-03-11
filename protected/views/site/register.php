@@ -1,50 +1,47 @@
 <?php
-$this->pageTitle=Yii::app()->name . ' - Register';
-$this->breadcrumbs=array(
-	'Register',
-);
+$this->pageTitle = Yii::app()->name . ' - Register';
 ?>
 <div class="container">
-    
-<h1>Register</h1>
 
-<?php if(Yii::app()->user->hasFlash('register')): ?>
+    <h1>Register</h1>
 
-<div class="flash-success">
-	<?php echo Yii::app()->user->getFlash('register'); ?>
-</div>
+    <?php if (Yii::app()->user->hasFlash('register')): ?>
 
-<?php else: ?>
+        <div class="flash-success">
+            <?php echo Yii::app()->user->getFlash('register'); ?>
+        </div>
 
-<p>
-To obtain a consumer key and a consumer key to use this API, please fill in this form. Thank you.
-</p>
+    <?php else: ?>
 
-<div style="margin-left:40px;">
-<?php $form=$this->beginWidget('CActiveForm'); ?>
+        <p>
+            To obtain a consumer key and a consumer key to use this API, please fill in this form. Thank you.
+        </p>
 
-	<?php echo $form->errorSummary($model); ?>
+        <div style="margin-left:20px;">
+            <?php $form = $this->beginWidget('CActiveForm'); ?>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'name'); ?>
-		<?php echo $form->textField($model,'name'); ?>
-	</div>
+            <?php echo $form->errorSummary($model); ?>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'email'); ?>
-		<?php echo $form->textField($model,'email'); ?>
-	</div>
+            <div class="row">
+                <?php echo $form->labelEx($model, 'name'); ?>
+                <?php echo $form->textField($model, 'name'); ?>
+            </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'description'); ?>
-		<?php echo $form->textArea($model,'description',array('rows'=>6, 'cols'=>50)); ?>
-	</div>
+            <div class="row">
+                <?php echo $form->labelEx($model, 'email'); ?>
+                <?php echo $form->textField($model, 'email'); ?>
+            </div>
 
-	<div class="row submit">
-		<?php echo CHtml::submitButton('Submit'); ?>
-	</div>
+            <div class="row">
+                <?php echo $form->labelEx($model, 'description'); ?>
+                <?php echo $form->textArea($model, 'description', array('rows' => 6, 'cols' => 50)); ?>
+            </div>
 
-<?php $this->endWidget(); ?>
-</div>
-<?php endif; ?>
+            <div class="row submit">
+                <?php echo CHtml::submitButton('Submit'); ?>
+            </div>
+
+            <?php $this->endWidget(); ?>
+        </div>
+    <?php endif; ?>
 </div>

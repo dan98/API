@@ -27,7 +27,7 @@ class BattleController extends ApiController{
             $loser = Object::model()->findByPk($_POST['loser']);
             
             if($winner == null || $loser == null)
-                ApiOutput::sendResponse(404, 'The winner or the loser object doesn\'t exist.');
+                ApiOutput::sendResponse(404, "The winner or the loser object doesn't exist.");
 
             if($winner->user_id == Yii::app()->user->id && $loser->user_id == Yii::app()->user->id)
             {
@@ -47,7 +47,6 @@ class BattleController extends ApiController{
             else
                 ApiOutput::sendResponse(403, 'Forbidden to operate with the winner or the loser object.');
 
-
             foreach($_POST as $var=>$value)
             {
                 if($model->hasAttribute($var))
@@ -63,9 +62,8 @@ class BattleController extends ApiController{
             $model->user_id =  Yii::app()->user->id;
 
             if($model->save())
-            {
                 ApiOutput::sendResponse(200, $model->findByPk($model->id)->toJSON());
-            }
+            
             else
             {
                 $msg = sprintf("Couldn't create <b>Battle</b>. ");

@@ -10,6 +10,7 @@ return array(
         'application.controllers.actions.*'
     ),
     'defaultController' => 'site/',
+    /*
     'modules' => array(
         'gii' => array(
             'class' => 'system.gii.GiiModule',
@@ -17,6 +18,7 @@ return array(
             'generatorPaths' => array('bootstrap.gii')
         ),
     ),
+     */
     'components' => array(
         'user' => array(
             // enable cookie-based authentication
